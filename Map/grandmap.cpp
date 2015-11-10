@@ -7,7 +7,7 @@ GrandMap::GrandMap(Storage *datasource, float x, float y, int width, int height)
     this->height = height;
     this->x = x;
     this->y = y;
-    this->size = 10;
+    this->size = 50;
     this->projectionviewGenerator("WE");
     candidate_projectionview = new std::vector<ProjectionView*>();
     xp = new std::vector<float>();

@@ -87,3 +87,8 @@ void Point::setColor(int color)
     }
 }
 
+void Point::setGradientColor(int R, int G, int B)
+{
+    this->color.setRgb(R, G, B);
+}
+

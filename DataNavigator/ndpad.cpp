@@ -67,20 +67,24 @@ void NDPad::mouseReleaseEvent(QMouseEvent *event)
 void NDPad::mousePressEvent(QMouseEvent *event)
 {
     QPointF pos = event->pos();
-    Eigen::VectorXf V;
+    Eigen::VectorXf V, W;
     if(isInPad(pos)){
         //check which circle is active
         if(sqrt(pow(pos.x() - this->circleX.center().x(), 2) + pow(pos.y() - this->circleX.center().y(), 2)) < 7){
               flag = true;
               this->circleX.moveTo(pos.x() - 10, pos.y() - 10);
               V = this->get_X_Vector(pos.x(), pos.y());
-              this->plot->setProjection(V, this->getOrthogonal_Y_Vector());
+              W = this->getOrthogonal_Y_Vector();
+              this->plot->setProjection(V, W);
+              this->info->setProjectionView(V, W);
         }
         else if(sqrt(pow(pos.x() - this->circleY.center().x(), 2) + pow(pos.y() - this->circleY.center().y(), 2)) < 7){
               flag = false;
               this->circleY.moveTo(pos.x() - 10, pos.y() - 10);
-              V = this->get_Y_Vector(pos.x(), pos.y());
-              this->plot->setProjection(x_axis, this->getOrthogonal_Y_Vector());
+              this->get_Y_Vector(pos.x(), pos.y());
+              V = this->getOrthogonal_Y_Vector();
+              this->plot->setProjection(x_axis, V);
+              this->info->setProjectionView(x_axis, V);
         }
     }
 }
@@ -101,6 +105,11 @@ void NDPad::mouseMoveEvent(QMouseEvent *event)
 void NDPad::setPlot(ScatterPlot *plot)
 {
     this->plot = plot;
+}
+
+void NDPad::setInfo(ScatterPlotInfoPanel *info)
+{
+    this->info = info;
 }
 
 void NDPad::setInitalProjection(std::vector<float> *xp, std::vector<float> *yp)

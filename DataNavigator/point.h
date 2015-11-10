@@ -22,6 +22,7 @@ public:
 
     //define the cluster color of the point
     void setColor(int color);
+    void setGradientColor(int R, int G, int B);
 
 private:
     float width;

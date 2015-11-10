@@ -21,6 +21,8 @@ public:
     void paintEvent(QPaintEvent *event);
 public slots:
 
+private slots:
+    void attributeChange();
 
 private:
     PainterPanel *panel;

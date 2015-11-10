@@ -13,7 +13,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
 
-    void setProjectionView( std::vector<float>* x_axis, std::vector<float>* y_axis);
+    void setProjectionView( Eigen::VectorXf XP, Eigen::VectorXf YP);
 private:
 
     float x, y, width, height;

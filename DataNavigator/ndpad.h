@@ -5,6 +5,7 @@
 #include <Eigen/Core>
 #include <QMouseEvent>
 #include "scatterplot.h"
+#include "scatterplotinfopanel.h"
 class NDPad : public QGraphicsItem
 {
 public:
@@ -17,6 +18,7 @@ public:
     void mouseMoveEvent(QMouseEvent *event);
     //need to use to set up the initial projection
     void setPlot(ScatterPlot* plot);
+    void setInfo(ScatterPlotInfoPanel *info);
     void setInitalProjection(std::vector<float> *xp, std::vector<float> *yp);
     QRectF boundingRect() const;
 
@@ -36,6 +38,7 @@ private:
 
     QStringList* labels;
     ScatterPlot *plot;
+    ScatterPlotInfoPanel *info;
     float x, y, gap, radius;
     int dimension;
 

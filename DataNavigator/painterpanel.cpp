@@ -7,12 +7,14 @@ PainterPanel::PainterPanel(Storage *storage, ProjectionView *p, QWidget *parent)
     width = rect.width() * 0.5;
     height = rect.height() * 0.7;
     this->resize(rect.width()/2, rect.height());
-    this->plot = new ScatterPlot(storage,20, 20, width/2, width/2, p);
+    this->plot = new ScatterPlot(storage,30, 30, width/2, width/2, p);
     this->pad = new NDPad(width/2 + width/2, width/4, storage->getLabels());
-    this->pad->setPlot(plot);
-    this->pad->setInitalProjection(p->getXP(), p->getYP());
-    this->info = new ScatterPlotInfoPanel(10, width/2 + 50, width - 20, height/3,
+    this->info = new ScatterPlotInfoPanel(20, width/2 + 60, width*1.2, height/3 - 30,
                                           storage->getLabels(), p->getXP(), p->getYP());
+    this->pad->setPlot(plot);
+    this->pad->setInfo(info);
+    this->pad->setInitalProjection(p->getXP(), p->getYP());
+
 }
 
 PainterPanel::~PainterPanel()
@@ -24,6 +26,12 @@ void PainterPanel::setProjectionView(ProjectionView *p)
 {
     plot->setProjectionView(p);
     pad->setInitalProjection(p->getXP(), p->getYP());
+    this->update();
+}
+
+void PainterPanel::attributeChange(int index)
+{
+    plot->attributeChange(index);
     this->update();
 }
 

@@ -1,5 +1,5 @@
 #include "scatterplot.h"
-
+#include <float.h>
 ScatterPlot::ScatterPlot(Storage *datasource, float x, float y, float width, float height, ProjectionView* p)
 {
     this->datasource = datasource;
@@ -10,6 +10,18 @@ ScatterPlot::ScatterPlot(Storage *datasource, float x, float y, float width, flo
     this->height = height;
     this->setProjectionView(p);
 
+    //axis component initial
+        //x-axis
+    lineX.setLine(x-10, y + height + 10, x + width + 50, y + height + 10);
+    Xarrow1.setLine(x + width + 50, y + height + 10, x + width + 35, y + height+5);
+    Xarrow2.setLine(x + width + 50, y + height + 10, x + width + 35, y + height+15);
+        //y-axis
+    lineY.setLine(x-10, y + height + 10, x - 10, y - 30);
+    Yarrow1.setLine(x - 10, y - 30, x - 15, y - 15);
+    Yarrow2.setLine(x - 10, y - 30, x - 5, y - 15);
+    serifFont.setFamily("Times");
+    serifFont.setPixelSize(10);
+    serifFont.setBold(true);
 }
 
 ScatterPlot::~ScatterPlot()
@@ -23,13 +35,45 @@ void ScatterPlot::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->setBrush(white);
     painter->drawRect(this->locationX-10, this->locationY-10,this->width+20, this->height+20);
 
+    //draw axis label
+    painter->drawLine(lineX);
+    painter->drawLine(lineY);
+    painter->drawLine(Xarrow1);
+    painter->drawLine(Xarrow2);
+    painter->drawLine(Yarrow1);
+    painter->drawLine(Yarrow2);
+    painter->setFont(serifFont);
+    painter->drawText(locationX + width + 55, locationY + height + 10, "X-Axis");
+    painter->drawText(locationX, locationY - 20, "Y-Axis");
     for(int i = 0; i< point_pool->size(); i++){
         point_pool->at(i)->paint(painter, option, widget);
     }
+
+
 }
 
 QRectF ScatterPlot::boundingRect() const
 {
+
+}
+
+void ScatterPlot::attributeChange(int index)
+{
+    float max = FLT_MIN ,min = FLT_MAX, value;
+    Point* p;
+    for(int r = 0; r < datasource->getDataEntrys(); r++){
+        if(max < datasource->getItem(r, index))
+            max = datasource->getItem(r, index);
+        if(min > datasource->getItem(r, index))
+            min = datasource->getItem(r, index);
+    }
+
+    for(int i = 0; i < point_pool->size(); i++){
+        p = point_pool->at(i);
+        value = datasource->getItem(i, index);
+        p->setGradientColor(255 * (value/max), 255 * (max - value)/ max, 0);
+    }
+
 
 }
 

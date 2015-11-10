@@ -11,14 +11,19 @@ ProjectionPanel::ProjectionPanel(Storage *storage, ProjectionView *p, QWidget *p
     panel = new PainterPanel(storage, p);
 
     QGridLayout *mainLayout = new QGridLayout;
-    attributeBox->addItem(tr("attr1", "at1"));
-    attributeBox->addItem(tr("attr2", "at2"));
+
+    QStringList* labels = storage->getLabels();
+    for(int i = 0; i < labels->size(); i++){
+        attributeBox->addItem(labels->at(i), i);
+    }
     attribute->setBuddy(attributeBox);
 
     mainLayout->addWidget(panel, 0, 0, 1, 4);
     mainLayout->addWidget(attribute, 2, 0, Qt::AlignRight);
     mainLayout->addWidget(attributeBox, 2, 1);
     this->setLayout(mainLayout);
+
+    connect(attributeBox, SIGNAL(activated(int)), this, SLOT(attributeChange()));
 
     QRect rect = QApplication::desktop()->screenGeometry();
     float width = rect.width() * 0.7;
@@ -40,4 +45,10 @@ void ProjectionPanel::setProjectionView(ProjectionView *p)
 
 void ProjectionPanel::paintEvent(QPaintEvent *event)
 {
+}
+
+void ProjectionPanel::attributeChange()
+{
+    int num = attributeBox->itemData(attributeBox->currentIndex()).toInt();
+    this->panel->attributeChange(num);
 }

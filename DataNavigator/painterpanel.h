@@ -13,6 +13,7 @@ public:
     explicit PainterPanel(Storage* storage, ProjectionView *p, QWidget *parent = 0);
     ~PainterPanel();
     void setProjectionView(ProjectionView* p);
+    void attributeChange(int index);
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 

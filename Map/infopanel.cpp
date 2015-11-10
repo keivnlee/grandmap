@@ -58,21 +58,51 @@ InfoPanel::~InfoPanel()
 void InfoPanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QBrush brush(Qt::white);
+    QBrush magenta(Qt::magenta);
+    QBrush cyan(Qt::cyan);
     painter->setBrush(brush);
     //painter->drawRect(x, y + 200, width/2, height/2);
+    painter->drawRect(x, y+20, width, 60);
+    painter->drawRect(x, y+90, width, 60);
 
     for(int i = 0 ; i < labels.size(); i++){
         painter->drawText(x+10+i*width/labels.size(), y-20, labels[i]);
     }
 
     for(int i = 0 ; i < X_axis->size(); i++){
-        painter->drawRect(x+10+i*width/X_axis->size(), y + 50, 20, (X_axis->at(i)*30));
-        painter->drawRect(x+10+i*width/Y_axis->size(), y + 120, 20, (Y_axis->at(i)*30));
+        if(X_axis->at(i) > 0){
+            painter->setBrush(cyan);
+            painter->drawRect(x+10+i*width/X_axis->size(), y + 50, 20, (-X_axis->at(i)*30));
+        }else{
+            painter->setBrush(magenta);
+            painter->drawRect(x+10+i*width/X_axis->size(), y + 50, 20, (-X_axis->at(i)*30));
+        }
+
+        if(Y_axis->at(i) > 0){
+            painter->setBrush(cyan);
+            painter->drawRect(x+10+i*width/Y_axis->size(), y + 120, 20, (-Y_axis->at(i)*30));
+        }else{
+            painter->setBrush(magenta);
+            painter->drawRect(x+10+i*width/Y_axis->size(), y + 120, 20, (-Y_axis->at(i)*30));
+        }
+
     }
+    QFont font;
+    font.setPixelSize(8);
+
+
     painter->drawLine(x, y + 50, x + width, y + 50);
     painter->drawLine(x, y + 120, x + width, y + 120);
     painter->drawText(x - 50, y + 50, "X-Axis");
     painter->drawText(x - 50, y + 120, "Y-Axis");
+    painter->setFont(font);
+    painter->drawText(x+width+10, y + 20, "1");
+    painter->drawText(x+width+10, y + 50, "0");
+    painter->drawText(x+width+10, y + 75, "-1");
+    painter->drawText(x+width+10, y + 95, "1");
+    painter->drawText(x+width+10, y + 120, "0");
+    painter->drawText(x+width+10, y + 150, "-1");
+
 
     //this->drawProjectionDistanceDistributionBarChart(painter);
 }

@@ -29,7 +29,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
 
-
+    void attributeChange(int index);
     void setProjectionView(ProjectionView* pv);
     //change the projection vector of current projection view.
     void setProjection(Eigen::VectorXf xv, Eigen::VectorXf yv);
@@ -61,7 +61,9 @@ private:
     Storage *datasource;
     std::vector<float> x_axis, y_axis;
 
-
+    //draw axis
+    QLine lineX, Xarrow1, Xarrow2, lineY, Yarrow1, Yarrow2;
+    QFont serifFont;
 };
 
 #endif // SCATTERPLOT_H
