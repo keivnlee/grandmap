@@ -104,7 +104,7 @@ void InfoPanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->drawText(x+width+10, y + 150, "-1");
 
 
-    //this->drawProjectionDistanceDistributionBarChart(painter);
+    this->drawProjectionDistanceDistributionBarChart(painter);
 }
 
 QRectF InfoPanel::boundingRect() const

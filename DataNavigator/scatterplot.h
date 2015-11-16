@@ -6,6 +6,7 @@
 #include "../Map/projectionview.h"
 #include <Library/kmeans++/KMeans.h>
 #include <QGraphicsItem>
+#include <QMouseEvent>
 #include "scatterplotinfopanel.h"
 class ScatterPlot : QGraphicsItem
 {
@@ -28,6 +29,9 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
     void attributeChange(int index);
     void setProjectionView(ProjectionView* pv);
@@ -64,6 +68,10 @@ private:
     //draw axis
     QLine lineX, Xarrow1, Xarrow2, lineY, Yarrow1, Yarrow2;
     QFont serifFont;
+
+    //color bar
+    bool flag;//indicate if the color bar need to show out or not
+    float colorMax, colorMin;
 };
 
 #endif // SCATTERPLOT_H

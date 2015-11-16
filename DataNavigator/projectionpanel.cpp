@@ -30,7 +30,6 @@ ProjectionPanel::ProjectionPanel(Storage *storage, ProjectionView *p, QWidget *p
     float height = rect.height() * 0.7;
     this->resize(width, height);
     this->setWindowTitle(tr("ND-Touch Pad"));
-    //layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 ProjectionPanel::~ProjectionPanel()

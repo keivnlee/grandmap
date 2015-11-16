@@ -22,6 +22,8 @@ ScatterPlot::ScatterPlot(Storage *datasource, float x, float y, float width, flo
     serifFont.setFamily("Times");
     serifFont.setPixelSize(10);
     serifFont.setBold(true);
+
+    this->flag = false;
 }
 
 ScatterPlot::~ScatterPlot()
@@ -49,12 +51,49 @@ void ScatterPlot::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         point_pool->at(i)->paint(painter, option, widget);
     }
 
+    if(flag){
+        float gap = (colorMax - colorMin)/100;
+        QColor c;
+        QBrush brush(Qt::blue);
+        for(int i = 0; i< 100; i++){
+            c.setRgb(255 * (i*gap/(colorMax-colorMin)), 255 * (colorMax - (i*gap + colorMin))/ (colorMax-colorMin), 0);
+            brush.setColor(c);
+            painter->fillRect(locationX+width+30, locationY+i*2 - 10, 30, 2, brush);
+        }
+        painter->drawText(locationX+width+70, locationY ,  QString::number(colorMin, 'f', 2));
+        painter->drawText(locationX+width+70, locationY+190,  QString::number(colorMax, 'f', 2));
+    }
+
 
 }
 
 QRectF ScatterPlot::boundingRect() const
 {
 
+}
+
+void ScatterPlot::mousePressEvent(QMouseEvent *event)
+{
+    for(int i = 0; i < point_pool->size(); i++){
+        if(point_pool->at(i)->contain(event->pos())){
+            point_pool->at(i)->setHintActive(true);
+        }else{
+            point_pool->at(i)->setHintActive(false);
+        }
+
+    }
+}
+
+void ScatterPlot::mouseMoveEvent(QMouseEvent *event)
+{
+
+}
+
+void ScatterPlot::mouseReleaseEvent(QMouseEvent *event)
+{
+    for(int i = 0; i < point_pool->size(); i++){
+        point_pool->at(i)->setHintActive(false);
+    }
 }
 
 void ScatterPlot::attributeChange(int index)
@@ -71,10 +110,11 @@ void ScatterPlot::attributeChange(int index)
     for(int i = 0; i < point_pool->size(); i++){
         p = point_pool->at(i);
         value = datasource->getItem(i, index);
-        p->setGradientColor(255 * (value/max), 255 * (max - value)/ max, 0);
+        p->setGradientColor(255 * (value-min)/(max-min), 255 * (max - value)/ (max-min), 0);
     }
-
-
+    flag = true;
+    colorMax = max;
+    colorMin = min;
 }
 
 void ScatterPlot::setProjectionView(ProjectionView *pv)
@@ -104,7 +144,6 @@ void ScatterPlot::setProjection(Eigen::VectorXf xv, Eigen::VectorXf yv)
 
     this->pointGenerator();
     this->pointPositionNormalization();
-
 }
 
 void ScatterPlot::pointGenerator()
@@ -122,9 +161,9 @@ void ScatterPlot::pointGenerator()
                 x += (this->x_axis.at(d) * this->datasource->getItem(e,d));
                 y += (this->y_axis.at(d) * this->datasource->getItem(e,d));
             }
-            this->point_pool->push_back(new Point(x, y));
+            this->point_pool->push_back(new Point(x, y, e, this->datasource));
         }
-        this->KMean();
+        //this->KMean();
     }else{
         for(int e = 0; e < entrys; e++){
             x = 0;

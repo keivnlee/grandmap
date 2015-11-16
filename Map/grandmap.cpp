@@ -399,8 +399,6 @@ Eigen::VectorXf GrandMap::randomVector(int d)
             sum += r*r;
             P[i] = r;
         }
-
-
     }while(sum > 1);
     return P/P.norm();
 }

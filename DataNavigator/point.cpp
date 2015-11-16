@@ -1,12 +1,16 @@
 #include "point.h"
 
-Point::Point(float x, float y)
+Point::Point(float x, float y, int index, Storage *storage)
 {
     this->valueX = x;
     this->valueY = y;
     this->width = 10;
     this->height = 10;
     this->setColor(-1);
+    this->index = index;
+    this->storage = storage;
+
+    this->HintActive = false;
 }
 
 Point::~Point()
@@ -19,11 +23,27 @@ void Point::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     QBrush brush(this->color);
     painter->setBrush(brush);
     painter->drawEllipse(this->locationX, this->locationY, this->width, this->height);
+
+    if(HintActive){
+        this->drawHintTextBox(painter);
+    }
 }
 
 QRectF Point::boundingRect() const
 {
 
+}
+
+bool Point::contain(QPoint pos)
+{
+    float x = pos.x();
+    float y = pos.y();
+    bool case1 = this->locationX < x && x < this->locationX + this->width;
+    bool case2 = this->locationY < y && y < this->locationY + this->height;
+    if(case1 && case2)
+        return true;
+    else
+        return false;
 }
 
 float Point::getX()
@@ -82,7 +102,7 @@ void Point::setColor(int color)
         this->color.setRgb(102, 0, 204);
         break;
     default:
-        this->color.setRgb(0,0,0);
+        this->color.setRgb(255,255,255);
         break;
     }
 }
@@ -90,5 +110,16 @@ void Point::setColor(int color)
 void Point::setGradientColor(int R, int G, int B)
 {
     this->color.setRgb(R, G, B);
+}
+
+void Point::setHintActive(bool value)
+{
+    this->HintActive = value;
+}
+
+void Point::drawHintTextBox(QPainter* painter)
+{
+    painter->drawRect(locationX, locationY, 50, 50);
+    painter->drawText(locationX, locationY, QString::number(storage->getItem(index, 0), 'f', 3));
 }
 

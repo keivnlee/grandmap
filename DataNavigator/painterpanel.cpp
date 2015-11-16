@@ -56,12 +56,20 @@ void PainterPanel::paintEvent(QPaintEvent *event)
 void PainterPanel::mousePressEvent(QMouseEvent *event)
 {
     pad->mousePressEvent(event);
+    plot->mousePressEvent(event);
     this->update();
 }
 
 void PainterPanel::mouseMoveEvent(QMouseEvent *event)
 {
     pad->mouseMoveEvent(event);
+    plot->mouseMoveEvent(event);
+    this->update();
+}
+
+void PainterPanel::mouseReleaseEvent(QMouseEvent *event)
+{
+    plot->mouseReleaseEvent(event);
     this->update();
 }
 

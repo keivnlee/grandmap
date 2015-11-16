@@ -2,14 +2,15 @@
 #define POINT_H
 #include <QGraphicsItem>
 #include <QPainter>
-
+#include "../storage.h"
 class Point : QGraphicsItem
 {
 public:
-    Point(float x, float y);
+    Point(float x, float y, int index, Storage* storage);
     ~Point();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
+    bool contain(QPoint pos);
 
     float getX();
     float getY();
@@ -23,6 +24,8 @@ public:
     //define the cluster color of the point
     void setColor(int color);
     void setGradientColor(int R, int G, int B);
+    void setHintActive(bool value);
+    void drawHintTextBox(QPainter *painter);
 
 private:
     float width;
@@ -35,6 +38,9 @@ private:
     float locationY;
     QColor color;
 
+    int index;//the index of data entry in the data set.
+    bool HintActive;
+    Storage* storage;
 };
 
 #endif // POINT_H

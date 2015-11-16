@@ -11,7 +11,7 @@ RenderArea::RenderArea(QWidget *parent)
     width = rect.width() * 0.8;
     height = rect.height() * 0.7;
 
-    this->loader = new  FileLoader("/Users/lizhimin/Desktop/QT/ND_Touch_Pad/iris.csv");
+    this->loader = new  FileLoader("/Users/lizhimin/Desktop/QT/ND_Touch_Pad/NA_First_Month.csv");
     map = new GrandMap(loader->getDataSource(), 30, 30, width/3-10, width/3-10);
     pcoordinate = new ParallelCoordinate(10, width/3 + 40, width - 20, width/6, map->getProjectionViews());
     info = new InfoPanel(width/2-50, 30, width/2, width/3, map->getXP(), map->getYP(), map->getProjectionDistance());
