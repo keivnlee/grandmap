@@ -55,7 +55,7 @@ public:
     std::vector<float> *getXP();
     std::vector<float> *getYP();
     std::vector<float> *getProjectionDistance();
-    void setProjection(Eigen::VectorXf xp, Eigen::VectorXf yp);
+    void setProjection(Eigen::VectorXf xp, Eigen::VectorXf yp, int row, int column);
     float getProjecitonViewMaximumDistance();
     void setSimilarDistance(float distance);
     //once the sample in the projection pool change, renormalize
@@ -159,6 +159,7 @@ private:
      std::vector<float>* xp;
      std::vector<float>* yp;
      std::vector<float>* distance;
+     QStringList labels;
      float max_x;
      float min_x;
      float max_y;
@@ -172,6 +173,8 @@ private:
 
      int size;//sample size of the projection view
      //float distance; // the similiarity distance between two projeciton view
+
+     int row, column;
 
      //draw axis
      QLine lineX, Xarrow1, Xarrow2, lineY, Yarrow1, Yarrow2;

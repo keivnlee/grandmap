@@ -50,7 +50,9 @@ SOURCES += main.cpp\
     Map/parallelcoordinate.cpp \
     Map/infopanel.cpp \
     DataNavigator/scatterplotinfopanel.cpp \
-    DataNavigator/painterpanel.cpp
+    DataNavigator/painterpanel.cpp \
+    Map/scagnostic.cpp \
+    Map/scagnosticitem.cpp
 
 HEADERS  += window.h \
     renderarea.h \
@@ -87,6 +89,8 @@ HEADERS  += window.h \
     Map/parallelcoordinate.h \
     Map/infopanel.h \
     DataNavigator/scatterplotinfopanel.h \
-    DataNavigator/painterpanel.h
+    DataNavigator/painterpanel.h \
+    Map/scagnostic.h \
+    Map/scagnosticitem.h
 
 FORMS    += window.ui

@@ -30,6 +30,7 @@ public:
 
     std::vector<float> *getXP();
     std::vector<float> *getYP();
+    float getMetricsValue(int index);
     float getOutlying();
     float getSkewed();
     float getClumpy();
@@ -92,6 +93,7 @@ private:
 
    std::vector<float>* xp;
    std::vector<float>* yp;
+   std::vector<float> metricsvalue;
    //scagnostic metrics
    float outlying;
    float Skewed;

@@ -7,7 +7,7 @@ GrandMap::GrandMap(Storage *datasource, float x, float y, int width, int height)
     this->height = height;
     this->x = x;
     this->y = y;
-    this->size = 50;
+    this->size = 100;
     this->projectionviewGenerator("WE");
     candidate_projectionview = new std::vector<ProjectionView*>();
     xp = new std::vector<float>();
@@ -19,6 +19,19 @@ GrandMap::GrandMap(Storage *datasource, float x, float y, int width, int height)
     this->init_Max_Min();
     this->normalizaton();
     ProjectionDistanceDistributionCalculation();
+
+
+    row = -1;
+    column = -1;
+    labels.append("outlying");
+    labels.append("skewed");
+    labels.append("clumpy");
+    labels.append("sparse");
+    labels.append("striated");
+    labels.append("convex");
+    labels.append("skinny");
+    labels.append("stringy");
+    labels.append("monotonic");
 
     //axis component initial
         //x-axis
@@ -53,8 +66,17 @@ void GrandMap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->drawLine(Yarrow1);
     painter->drawLine(Yarrow2);
     painter->setFont(serifFont);
-    painter->drawText(x + width + 55, y + height + 10, "X-Axis");
-    painter->drawText(x - 10, y - 20, "Y-Axis");
+    if(row ==-1 && column == -1){
+        painter->drawText(x + width + 55, y + height + 10, "X-Axis");
+        painter->drawText(x - 10, y - 20, "Y-Axis");
+
+    }else{
+        painter->drawText(x + width + 55, y + height + 10, labels.at(column));
+        painter->drawText(x - 10, y - 20, labels.at(row));
+        painter->drawText(x - 20, y+height+5, "0");
+        painter->drawText(x+width, y+height+5, "1");
+        painter->drawText(x - 20, y, "1");
+    }
     for(int i = 0; i < this->projectionview_pool->size(); i++){
         projectionview_pool->at(i)->paint(painter, option, widget);
     }
@@ -169,17 +191,25 @@ std::vector<float> *GrandMap::getProjectionDistance()
     return this->distance;
 }
 
-void GrandMap::setProjection(Eigen::VectorXf xp, Eigen::VectorXf yp)
+void GrandMap::setProjection(Eigen::VectorXf xp, Eigen::VectorXf yp, int row, int column)
 {
     this->xp->clear();
     this->yp->clear();
     for(int r = 0; r < xp.rows(); r++){
         this->xp->push_back(xp[r]);
         this->yp->push_back(yp[r]);
-        qDebug() << r << ":" <<xp[r];
     }
     this->init_Max_Min();
-    this->normalizaton();
+    //this->normalizaton();
+    ProjectionView* pview;
+    for(int p = 0; p < projectionview_pool->size(); p++){
+        pview = projectionview_pool->at(p);
+        pview->setLocationX(pview->getX()*this->width + this->x);
+        pview->setLocationY(-pview->getY()*height +height+ this->y);
+    }
+
+    this->row = row;
+    this->column = column;
 }
 
 float GrandMap::getProjecitonViewMaximumDistance()
@@ -357,10 +387,10 @@ void GrandMap::normalizaton()
     ProjectionView* pview;
     for(int p = 0; p < projectionview_pool->size(); p++){
         pview = projectionview_pool->at(p);
-        pview->setLocationX(-(pview->getX() - this->min_x)/(this->max_x - this->min_x)*this->width
-                            + this->x+width);
-        pview->setLocationY(-(pview->getY() -this->min_y)/(this->max_y - this->min_y)*this->height
-                            + this->y+height);
+        pview->setLocationX((pview->getX() - this->min_x)/(this->max_x - this->min_x)*this->width
+                            + this->x);
+        pview->setLocationY((pview->getY() -this->min_y)/(this->max_y - this->min_y)*this->height
+                            + this->y);
     }
 }
 

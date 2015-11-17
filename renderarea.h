@@ -5,6 +5,7 @@
 #include "Map/grandmap.h"
 #include "Map/parallelcoordinate.h"
 #include "Map/infopanel.h"
+#include "Map/scagnostic.h"
 class RenderArea : public QWidget{
 
     Q_OBJECT
@@ -25,11 +26,13 @@ protected:
     void mouseReleaseEvent(QMouseEvent * event);
 
 private:
+
     int width ,height;
     FileLoader * loader;
     GrandMap* map;
     ParallelCoordinate *pcoordinate;
     InfoPanel* info;
+    Scagnostic* scagnostic;
     QRect Circle;
 
 };

@@ -1,6 +1,7 @@
 #include "projectionview.h"
 #include <QPainter>
 #include <math.h>
+#include <QDebug>
 ProjectionView::ProjectionView(std::vector<float> *xp, std::vector<float> *yp, Storage *storage)
 {
     this->xp = xp;
@@ -41,6 +42,16 @@ std::vector<float> *ProjectionView::getXP()
 std::vector<float> *ProjectionView::getYP()
 {
     return this->yp;
+}
+
+float ProjectionView::getMetricsValue(int index)
+{
+    if(index > 8){
+        qDebug() << "metricx index out of bound";
+        exit(0);
+    }else{
+        return this->metricsvalue[index];
+    }
 }
 
 float ProjectionView::getOutlying()
@@ -249,7 +260,7 @@ void ProjectionView::metricsCalculator()
     /********************************************************
     calcuate the metrics value of scatter plot.
     *********************************************************/
-    std::vector<float> metricsvalue = this->metrics->CalculateMultipleEmbeddingMetrics(x_axis,y_axis);
+    metricsvalue = this->metrics->CalculateMultipleEmbeddingMetrics(x_axis,y_axis);
     this->outlying = metricsvalue[0];
     this->Skewed = metricsvalue[1];
     this->clumpy = metricsvalue[2];
