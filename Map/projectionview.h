@@ -2,6 +2,7 @@
 #define PROJECTIONVIEW_H
 #include <QGraphicsItem>
 #include <QPainter>
+#include <Eigen/Core>
 #include "../storage.h"
 #include "../Scagnostics/GraphTheoreticScagnosticsMetric.h"
 #include "../ALGLIB/src/ap.h"
@@ -23,6 +24,7 @@ class ProjectionView : public QGraphicsItem
      *******************************************************************************/
 public:
     ProjectionView(std::vector<float>* xp, std::vector<float>* yp, Storage* storage);
+    ProjectionView(Eigen::VectorXf xp, Eigen::VectorXf yp, Storage* storage);
     ~ProjectionView();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;

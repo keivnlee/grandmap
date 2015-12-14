@@ -14,8 +14,9 @@ Window::Window(QWidget *parent) :
 
     renderArea = new RenderArea;
     SamplingBox = new QComboBox;
-    SamplingBox->addItem(tr("Wegman"), 1);
     SamplingBox->addItem(tr("Grand tour Uniform"), 2);
+    SamplingBox->addItem(tr("Wegman"), 1);
+
 
     SamplingLabel = new QLabel(tr("&Sampling"));
     SamplingLabel->setBuddy(SamplingBox);

@@ -8,6 +8,7 @@
 #include <QGraphicsItem>
 #include <QLabel>
 #include <QComboBox>
+#include <QPushButton>
 #include "painterpanel.h"
 class ProjectionPanel : public QWidget
 {
@@ -23,11 +24,13 @@ public slots:
 
 private slots:
     void attributeChange();
+    void buttonClick();
 
 private:
     PainterPanel *panel;
     QLabel *attribute;
     QComboBox *attributeBox;
+    QPushButton *resetButton;
 };
 
 #endif // PROJECTIONPANEL_H

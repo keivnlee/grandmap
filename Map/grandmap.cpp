@@ -7,7 +7,7 @@ GrandMap::GrandMap(Storage *datasource, float x, float y, int width, int height)
     this->height = height;
     this->x = x;
     this->y = y;
-    this->size = 100;
+    this->size = 50;
     this->projectionviewGenerator("WE");
     candidate_projectionview = new std::vector<ProjectionView*>();
     xp = new std::vector<float>();
@@ -45,6 +45,8 @@ GrandMap::GrandMap(Storage *datasource, float x, float y, int width, int height)
     serifFont.setFamily("Times");
     serifFont.setPixelSize(10);
     serifFont.setBold(true);
+
+    outputMetricsValue();
 }
 
 GrandMap::~GrandMap()
@@ -57,7 +59,6 @@ void GrandMap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     QBrush white(Qt::white);
     painter->setBrush(white);
     painter->drawRect(x-20, y-10,this->width+40, this->height+20);
-
     //draw axis label
     painter->drawLine(lineX);
     painter->drawLine(lineY);
@@ -77,6 +78,7 @@ void GrandMap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         painter->drawText(x+width, y+height+5, "1");
         painter->drawText(x - 20, y, "1");
     }
+
     for(int i = 0; i < this->projectionview_pool->size(); i++){
         projectionview_pool->at(i)->paint(painter, option, widget);
     }
@@ -604,5 +606,47 @@ float GrandMap::back_rescaleX(float x)
 float GrandMap::back_rescaleY(float y)
 {
     return (y - this->y) * (this->max_y - this->min_y)/this->height + this->min_y;
+}
+
+void GrandMap::outputMetricsValue()
+{
+    labels.append("outlying");
+    labels.append("skewed");
+    labels.append("clumpy");
+    labels.append("sparse");
+    labels.append("striated");
+    labels.append("convex");
+    labels.append("skinny");
+    labels.append("stringy");
+    labels.append("monotonic");
+    ProjectionView* view;
+    QString filename="/Users/lizhimin/Desktop/Data.csv";
+    QFile file( filename );
+    if ( file.open(QIODevice::ReadWrite) )
+    {
+        QTextStream stream( &file );
+        stream << "outlying,";
+        stream << "skewed,";
+        stream << "clumpy,";
+        stream << "sparse,";
+        stream << "striated,";
+        stream << "convex,";
+        stream << "skinny,";
+        stream << "stringy,";
+        stream << "monotonic" << endl;
+        for(int i = 0; i < projectionview_pool->size(); i++){
+            view = projectionview_pool->at(i);
+            stream << view->getOutlying() << ",";
+            stream << view->getSkewed() << ",";
+            stream << view->getClumpy() << ",";
+            stream << view->getSparse() << ",";
+            stream << view->getStriated() << ",";
+            stream << view->getConvex() << ",";
+            stream << view->getSkinny() << ",";
+            stream << view->getStringy() << ",";
+            stream << view->getMonotonic() << "," << endl;
+        }
+    }
+
 }
 

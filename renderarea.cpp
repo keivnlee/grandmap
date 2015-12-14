@@ -16,7 +16,7 @@ RenderArea::RenderArea(QWidget *parent)
     pcoordinate = new ParallelCoordinate(10, width/3 + 40, width - 20, width/6, map->getProjectionViews());
     scagnostic = new Scagnostic(width/2-20, 20, width/2, width/3, map->getProjectionViews());
     scagnostic->setMap(map);
-    //info = new InfoPanel(width/2-50, 30, width/2, width/3, map->getXP(), map->getYP(), map->getProjectionDistance());
+    info = new InfoPanel(width/2-50, 30, width/2, width/3, map->getXP(), map->getYP(), map->getProjectionDistance());
 }
 
 void RenderArea::SamplingMethodChange(int method)

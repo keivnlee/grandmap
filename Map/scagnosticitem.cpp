@@ -1,5 +1,4 @@
 #include "scagnosticitem.h"
-
 ScagnosticItem::ScagnosticItem(int row, int column, float x, float y, float width, float height, std::vector<ProjectionView*>* projectionview_pool)
 {
     this->row = row;

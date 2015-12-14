@@ -15,6 +15,21 @@ ProjectionView::ProjectionView(std::vector<float> *xp, std::vector<float> *yp, S
     this->visible = true;//in defualt, each projection view will be visible.
 }
 
+ProjectionView::ProjectionView(Eigen::VectorXf xp, Eigen::VectorXf yp, Storage *storage)
+{
+    std::vector<float>* XP = new std::vector<float>();
+    std::vector<float>* YP = new std::vector<float>();
+    for(int r = 0; r < xp.rows(); r++){
+        XP->push_back(xp[r]);
+        YP->push_back(yp[r]);
+    }
+    this->xp = XP;
+    this->yp = YP;
+    this->datasource = storage;
+    this->metrics = new DataExplorerHD::GraphTheoreticScagnosticsMetric();
+    this->metricsCalculator();
+}
+
 ProjectionView::~ProjectionView()
 {
 

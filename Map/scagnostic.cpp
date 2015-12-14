@@ -68,7 +68,7 @@ void Scagnostic::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     }
     //column labels
     for(int i = 0; i < labels.size(); i++){
-        painter->drawText(x + width/9 * i + width/9/4, y - 10, labels.at(i));
+        painter->drawText(x + width/9 * i + width/9/4, y + height+10, labels.at(i));
     }
 
     //row labels

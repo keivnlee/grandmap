@@ -14,6 +14,7 @@ public:
     ~PainterPanel();
     void setProjectionView(ProjectionView* p);
     void attributeChange(int index);
+    void buttonClick();
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 

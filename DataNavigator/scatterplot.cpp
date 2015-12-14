@@ -34,6 +34,8 @@ ScatterPlot::~ScatterPlot()
 void ScatterPlot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QBrush white(Qt::white);
+    QBrush blue(Qt::blue);
+    QBrush red(Qt::red);
     painter->setBrush(white);
     painter->drawRect(this->locationX-10, this->locationY-10,this->width+20, this->height+20);
 
@@ -45,7 +47,9 @@ void ScatterPlot::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->drawLine(Yarrow1);
     painter->drawLine(Yarrow2);
     painter->setFont(serifFont);
+    painter->setBrush(red);
     painter->drawText(locationX + width + 55, locationY + height + 10, "X-Axis");
+    painter->setBrush(blue);
     painter->drawText(locationX, locationY - 20, "Y-Axis");
     for(int i = 0; i< point_pool->size(); i++){
         point_pool->at(i)->paint(painter, option, widget);

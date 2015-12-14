@@ -23,7 +23,7 @@ void ScatterPlotInfoPanel::paint(QPainter *painter, const QStyleOptionGraphicsIt
     QBrush magenta(Qt::magenta);
     QBrush cyan(Qt::cyan);
     painter->setBrush(brush);
-    painter->drawRect(x, y, width, height);
+    painter->drawRect(x, y, width + 60, height);
 
     for(int i = 0; i < Labels->size(); i++){
         painter->drawText(x + 50 + i * width/Labels->size(), y + 10, Labels->at(i));
@@ -40,8 +40,8 @@ void ScatterPlotInfoPanel::paint(QPainter *painter, const QStyleOptionGraphicsIt
         painter->drawRect(x + 60 + i * width/Labels->size(), y + 120, 20, -30 * y_axis->at(i));
     }
 
-    painter->drawLine(x + 40, y + 60,  x + width - 20, y + 60);
-    painter->drawLine(x + 40, y + 120, x + width - 20, y + 120);
+    painter->drawLine(x + 40, y + 60,  x + width+40, y + 60);
+    painter->drawLine(x + 40, y + 120, x + width+40, y + 120);
     painter->drawText(x + 5,  y + 63, "X-Axis");
     painter->drawText(x + 5,  y + 123, "Y-Axis");
 }

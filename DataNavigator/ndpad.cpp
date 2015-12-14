@@ -1,6 +1,7 @@
 #include "ndpad.h"
 #include <math.h>
-NDPad::NDPad(float x, float y, QStringList *labels)
+#include <QDebug>
+NDPad::NDPad(float x, float y, QStringList *labels, Storage *datasource)
 {
     this->x = x;
     this->y = y;
@@ -9,7 +10,7 @@ NDPad::NDPad(float x, float y, QStringList *labels)
     this->radius = 90;
     this->gap = 20;
     this->flag = true;
-
+    this->datasource = datasource;
     for(int i = 0; i < dimension; i++){
         int px, py;
         px = this->radius * cos(M_PI * 2 * i / dimension) + x;
@@ -22,7 +23,6 @@ NDPad::NDPad(float x, float y, QStringList *labels)
     }
     this->circleX.setRect(x-5, y-5, 10, 10);
     this->circleY.setRect(x-5, y-5, 10, 10);
-
 }
 
 NDPad::~NDPad()
@@ -32,9 +32,9 @@ NDPad::~NDPad()
 
 void NDPad::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QBrush blue(Qt::blue);
     QBrush white(Qt::white);
-    QBrush red(Qt::red);
+    QBrush blue(Qt::green);
+    QBrush red(Qt::yellow);
     QPen textPen(Qt::black);
 
     painter->setPen(textPen);
@@ -52,11 +52,23 @@ void NDPad::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
         painter->setPen(textPen);
         painter->drawText(x2, y2, labels->at(i));
-        painter->setBrush(blue);
-        painter->drawEllipse(circleY);
-        painter->setBrush(red);
-        painter->drawEllipse(circleX);
     }
+    QRect* rect;
+    QBrush brush(Qt::blue);
+    QColor c;
+    int r, g, b;
+    for(int i = 0; i < padPoints.size(); i++){
+        this->getColor(padPointsValue.at(i), &r, &g, &b);
+        c.setRgb(r, g, b);
+        brush.setColor(c);
+        rect = padPoints.at(i);
+        painter->fillRect(rect->topLeft().x(), rect->topLeft().y(), rect->width(), rect->height(), brush);
+    }
+
+    painter->setBrush(blue);
+    painter->drawRect(circleY);
+    painter->setBrush(red);
+    painter->drawRect(circleX);
 }
 
 void NDPad::mouseReleaseEvent(QMouseEvent *event)
@@ -128,6 +140,18 @@ void NDPad::setInitalProjection(std::vector<float> *xp, std::vector<float> *yp)
     //make circle back to the center
     this->circleX.setRect(x-5, y-5, 10, 10);
     this->circleY.setRect(x-5, y-5, 10, 10);
+
+    this->colorGuiderInitial();
+}
+
+void NDPad::resetPad()
+{
+    this->X_AXIS = this->x_axis;
+    this->Y_AXIS = this->y_axis;
+
+    this->circleX.setRect(x-5, y-5, 10, 10);
+    this->circleY.setRect(x-5, y-5, 10, 10);
+    this->colorGuiderInitial();
 }
 
 QRectF NDPad::boundingRect() const
@@ -138,7 +162,7 @@ QRectF NDPad::boundingRect() const
 bool NDPad::isInPad(QPointF p)
 {
     float distance = sqrt(pow(p.x() - this->x, 2) + pow(p.y() - this->y, 2));
-    if(distance > radius - this->circleX.width())
+    if(distance > radius - this->circleX.width()/3)
         return false;
     else
         return true;
@@ -161,6 +185,52 @@ float NDPad::getWeightHelper(QPointF loc, QPointF p1, QPointF p2, QPointF p3)
         return 10;
 
     return (alpha + beta)/(b*b);
+}
+
+void NDPad::colorGuiderInitial()
+{
+
+    float startX, startY, rw, rh;
+    int row, col;
+    QRect* rect;
+
+    startX = this->x - this->radius;
+    startY = this->y - this->radius;
+    rw = 20;
+    rh = 20;
+    row= 2 * this->radius / rw;
+    col= 2 * this->radius / rh;
+    padPoints.clear();
+    padPointsValue.clear();
+    for(int r = 0; r < row; r++){
+        for(int c = 0; c < col; c++){
+            QPointF p(startX + r * rw + rw/2, startY + c * rh + rh/2);
+            if(this->isInPad(p)){
+                rect = new QRect(startX + r * rw, startY + c * rh, rw, rh);
+                padPoints.append(rect);
+                Eigen::VectorXf XAXIS = this->get_X_Vector(p.x(), p.y());
+                Eigen::VectorXf YAXIS = this->getOrthogonal_Y_Vector();
+                ProjectionView projection(XAXIS, YAXIS, this->datasource);
+                padPointsValue.append(projection.getMonotonic());
+            }
+        }
+        qDebug() << "row:" << r;
+    }
+    qDebug() << "number of rect" << padPoints.size();
+    this->x_axis = this->X_AXIS;
+    this->y_axis = this->Y_AXIS;
+}
+
+void NDPad::getColor(float value, int *red, int *green, int *blue)
+{
+    int aR = 0;   int aG = 0; int aB=255;  // RGB for our 1st color (blue in this case).
+    int bR = 255; int bG = 0; int bB=0;    // RGB for our 2nd color (red in this case).
+
+    if(value > 1) value = 1;
+
+    *red   = (int)((bR - aR) * value) + aR;      // Evaluated as -255*value + 255.
+    *green = (int)((bG - aG) * value) + aG;      // Evaluates as 0.
+    *blue  = (int)((bB - aB) * value) + aB;      // Evaluates as 255*value + 0.
 }
 
 Eigen::VectorXf NDPad::getBarycentricCoordinateVector(float x, float y)
@@ -241,6 +311,7 @@ Eigen::VectorXf NDPad::getOrthogonal_Y_Vector()
 
 Eigen::VectorXf NDPad::Orthogonal(Eigen::VectorXf PX, Eigen::VectorXf PY)
 {
-    PY = PY - PX.dot(PY) * PX;
-    return PY/PY.norm();
+    Eigen::VectorXf TP;
+    TP = PY - PX.dot(PY) * PX;
+    return TP/TP.norm();
 }

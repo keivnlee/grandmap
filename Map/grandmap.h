@@ -150,6 +150,8 @@ private:
      float back_rescaleX(float x);
      float back_rescaleY(float y);
 
+     void outputMetricsValue();
+
      ProjectionPanel* AnalysisPanel;
      Storage* datasource;
      std::vector<ProjectionView*>* projectionview_pool;
